@@ -7,12 +7,12 @@
     public int Quantity { get; set; }
     public decimal Price { get; set; }
 
-    public Data(DateTime date, string product, string region, int quantity, decimal price)
-    {
-        Date = date;
-        Product = product;
-        Region = region;
-        Quantity = quantity;
-        Price = price;
-    }
+    // public Data(DateTime date, string product, string region, int quantity, decimal price)
+    // {
+    //     Date = date;
+    //     Product = product;
+    //     Region = region;
+    //     Quantity = quantity;
+    //     Price = price;
+    // }
 }

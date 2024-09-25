@@ -9,26 +9,31 @@ using System.Linq;
 public class CsvCRUD
 {
     private CsvWorker _csvWorker;
-    public CsvCRUD(CsvWorker csvWorker)
+    public CsvCRUD(CsvWorker csvWorker) //Создать пустой конструктор, если не поступает ничего
     {
         _csvWorker = csvWorker;
     }
 
-    List<Data> GetAll()
+    public CsvCRUD()
+    {
+        
+    }
+
+    public List<Data> GetAll()
     {
         return _csvWorker.Read();
     }
-    void Add(string product, string region, int quantity, decimal price)
-    {
-        Data newData = new Data(DateTime.UtcNow, product, region, quantity, price);
+    // public void Add(string product, string region, int quantity, decimal price)
+    // {
+    //     Data newData = new Data(DateTime.UtcNow, product, region, quantity, price);
 
-        List<Data> allData = GetAll();
-        allData.Add(newData);
+    //     List<Data> allData = GetAll();
+    //     allData.Add(newData);
 
-        _csvWorker.Write(allData);
-    }
+    //     _csvWorker.Write(allData);
+    // }
 
-    void Delete(Data dataToDelete)
+    public void Delete(Data dataToDelete)
     {
         List<Data> allData = GetAll();
 
@@ -36,7 +41,7 @@ public class CsvCRUD
         _csvWorker.Write(allData);
     }
 
-    void Update(Data dataToUpdate)
+    public void Update(Data dataToUpdate)
     {
         List<Data> allData = GetAll();
         Data? record = allData.FirstOrDefault(x => x.Date == dataToUpdate.Date && x.Product == dataToUpdate.Product && x.Region == dataToUpdate.Region);
