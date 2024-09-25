@@ -8,11 +8,9 @@ using System.Linq;
 
 public class CsvCRUD
 {
-    private  string _filePath {get; set;}
     private CsvWorker _csvWorker;
-    public CsvCRUD(string filePath, CsvWorker csvWorker)
+    public CsvCRUD(CsvWorker csvWorker)
     {
-        _filePath = filePath;
         _csvWorker = csvWorker;
     }
 

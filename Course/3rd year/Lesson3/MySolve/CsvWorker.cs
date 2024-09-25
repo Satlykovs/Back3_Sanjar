@@ -9,7 +9,7 @@ namespace MySolve;
     public class CsvWorker
     {
         private readonly string _filePath;
-        CsvWorker(string filePath)
+        public CsvWorker(string filePath)
         {
             _filePath = filePath;
         }

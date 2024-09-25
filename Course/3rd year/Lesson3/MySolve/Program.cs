@@ -4,16 +4,9 @@ namespace MySolve;
 
 public class Program
 {
-    
-    private static readonly IEnumerable<Data> data = CsvWorker.Read("sales.csv");
+    CsvCRUD csvCRUD= new CsvCRUD(new CsvWorker("sales.csv"));
     public static void Main(string[] args)
     {
-
-        
-        foreach(var d in data)
-        {
-            Console.WriteLine($"{d.Date} : {d.Product} - {d.Region} - {d.Quantity} - {d.Price}");
-        }
 
         
     }
