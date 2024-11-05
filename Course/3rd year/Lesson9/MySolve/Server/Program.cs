@@ -6,8 +6,19 @@ using Microsoft.Extensions.DependencyInjection;
 var builder = WebApplication.CreateBuilder(args);
 
 
+
+builder.Services.AddCors(options =>
+   {
+       options.AddPolicy("AllowAll",
+           builder => builder.AllowAnyOrigin()
+                             .AllowAnyMethod()
+                             .AllowAnyHeader());
+   });
+
+
+
 builder.Services.AddDbContext<TaskContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection")));
+    options.UseNpgsql(Environment.GetEnvironmentVariable("ConnectionString")));
 
 
 
@@ -19,16 +30,23 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 
-var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+var dbContext = serviceScope.ServiceProvider.GetRequiredService<TaskContext>();
+dbContext.Database.EnsureCreated();
 }
 
+
+var app = builder.Build();
+
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
+
 app.UseHttpsRedirection();
-
+app.UseRouting();
 app.MapControllers();
-
+app.UseCors("AllowAll");
 app.Run();
