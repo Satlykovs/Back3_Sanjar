@@ -21,8 +21,8 @@ public class OrderRepository : IOrderRepository
     {
         var order = await _deliveryContext.Orders
         .Include(o => o.Customer)
-        .Include(o => o.Products)  //У меня долго была тут бага, пока не сделал includ-ы. Вопрос, почему не удаляются таким образом записи из других таблиц?
-        .FirstOrDefaultAsync(o => o.Id == id);
+        .Include(o => o.Products)  //У меня долго была тут бага, пока не сделал include-ы. Вопрос, почему не удаляются таким образом записи из других таблиц?
+        .FirstOrDefaultAsync(o => o.Id == id);  //Хотя без этих подтягиваний наоборот ругалось, что попытка удалить данные отсюда приведет к удалению Customer и Product.
         if (order != null)
         {
             _deliveryContext.Orders.Remove(order);
@@ -40,7 +40,7 @@ public class OrderRepository : IOrderRepository
     }
     public async Task UpdateOrderAsync(Order order)
     {
-        _deliveryContext.Orders.Update(order);
+        _deliveryContext.Orders.Update(order); // Я вообще не уверен, что Update работает, когда такая модель данных, которая состоит из вложенных в нее других
         await _deliveryContext.SaveChangesAsync();
     }
     public async Task CreateOrderAsync(Order order)

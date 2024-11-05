@@ -1,30 +1,71 @@
 @model Order
 
-<h2>Редактировать заказ</h2>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-<form asp-action="Edit">
-    <div class="form-group">
-        <label asp-for="Id" class="control-label"></label>
-        <input asp-for="Id" class="form-control" readonly />
-    </div>
+<head>
+    <link rel="stylesheet" href="~/css/styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
 
-    <div class="form-group">
-        <label asp-for="Customer.Name" class="control-label"></label>
-        <input asp-for="Customer.Name" class="form-control" />
-        <span asp-validation-for="Customer.Name" class="text-danger"></span>
-    </div>
+<body>
+    
+    <h2>Редактировать заказ</h2>
 
-    <div class="form-group">
-        <label asp-for="Products" class="control-label"></label>
-        <ul>
-            @foreach (var product in Model.Products)
+    <form asp-action="Edit" method="post">
+         @Html.AntiForgeryToken()
+        <div class="form-group">
+            <label asp-for="Id" class="control-label"></label>
+            <input asp-for="Id" class="form-control" readonly />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Customer.Name" class="control-label"></label>
+            <input asp-for="Customer.Name" class="form-control" />
+            <span asp-validation-for="Customer.Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Customer.Email" class="control-label"></label>
+            <input asp-for="Customer.Email" class="form-control" />
+            <span asp-validation-for="Customer.Email" class="text-danger"></span>
+        </div>
+
+        <h3>Товары</h3>
+        <div id="products">
+            @for (int i = 0; i < Model.Products.Count; i++)
             {
-                <li>@product.Name - @product.Price</li>
-            }
-        </ul>
-        <span asp-validation-for="Products" class="text-danger"></span>
-    </div>
+                <div class="form-group">
+                    <label asp-for="Products[i].Name"></label>
+                    <input asp-for="Products[i].Name" class="form-control" />
+                    <span asp-validation-for="Products[i].Name" class="text-danger"></span>
 
-    <button type="submit" class="btn btn-primary">Сохранить</button>
-    <a asp-action="Index" class="btn btn-secondary">Назад к списку заказов</a>
-</form>
+                    <label asp-for="Products[i].Price"></label>
+                    <input asp-for="Products[i].Price" class="form-control" />
+                    <span asp-validation-for="Products[i].Price" class="text-danger"></span>
+                </div>
+            }
+        </div>
+
+        <button type="button" onclick="addProduct()" class="btn btn-secondary">Добавить товар</button>
+
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a asp-action="Index" class="btn btn-secondary">Назад к списку заказов</a>
+    </form>
+
+    <script>
+        function addProduct() {
+            var index = document.querySelectorAll('#products .form-group').length;
+            var productHtml = `
+                <div class="form-group">
+                    <label>Название товара</label>
+                    <input name="Products[${index}].Name" class="form-control" />
+                    <span class="text-danger"></span>
+
+                    <label>Цена товара</label>
+                    <input name="Products[${index}].Price" type="number" class="form-control" />
+                    <span class="text-danger"></span>
+                </div>`;
+            document.getElementById('products').insertAdjacentHTML('beforeend', productHtml);
+        }
+    </script>
+</body>

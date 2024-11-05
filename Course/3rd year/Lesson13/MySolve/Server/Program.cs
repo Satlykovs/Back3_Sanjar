@@ -15,8 +15,6 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
-
-
 builder.Services.AddMvc();
 
 using (var serviceScope = builder.Services.BuildServiceProvider().CreateScope())
@@ -53,9 +51,10 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
-
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 app.MapControllers();
+app.MapRazorPages();
 
 app.Run();

@@ -2,85 +2,69 @@
 
 
 
+
+
+
 // using Microsoft.AspNetCore.Mvc;
 
+// [ApiController]
 // [Route("api/[controller]")]
 // public class OrderController : Controller
 // {
-//     private readonly IOrderRepository _orderRepository; 
+//     private readonly IOrderRepository _orderRepository;
 
 //     public OrderController(IOrderRepository orderRepository)
 //     {
 //         _orderRepository = orderRepository;
 //     }
 
-//     [HttpGet] 
-//     public async Task<IActionResult> Index()
+//     [HttpGet("{id}")]
+//     public async Task<IActionResult> GetOrder(int id)
 //     {
-//         var orders = await _orderRepository.GetAllOrdersAsync();
-//         return Ok(orders); 
+//         var order = await _orderRepository.GetOrderByIdAsync(id);
+//         if (order == null)
+//         {
+//             return NotFound();
+//         }
+//         return Ok(order);
 //     }
 
-//     [HttpGet("Create")] 
-//     public IActionResult Create()
+//     [HttpGet]
+//     public async Task<IActionResult> GetOrders()
 //     {
-//         return View(new Order()); 
+//         return Ok(await _orderRepository.GetAllOrdersAsync());
 //     }
 
-//     [HttpPost("Create")] 
-//     public async Task<IActionResult> Create([FromForm] Order order)
+//     [HttpPost]
+//     public async Task<IActionResult> CreateOrder([FromBody] Order order)
 //     {
 //         if (!ModelState.IsValid)
 //         {
-//             return View(order);
+//             return BadRequest(ModelState);
 //         }
 
 //         await _orderRepository.CreateOrderAsync(order);
-//         return RedirectToAction("Index");
+//         return Ok();
 //     }
 
-//     [HttpGet("Edit/{id}")] 
-//     public async Task<IActionResult> Edit(int id)
-//     {
-//         var order = await _orderRepository.GetOrderByIdAsync(id);
-//         if (order == null)
-//         {
-//             return NotFound();
-//         }
-//         return View(order); 
-//     }
-
-//     [HttpPatch("Edit")] 
-//     public async Task<IActionResult> Edit([FromForm] Order order)
+//     [HttpPatch]
+//     public async Task<IActionResult> PatchOrder([FromBody] Order order)
 //     {
 //         if (!ModelState.IsValid)
 //         {
-//             return View(order);
+//             return BadRequest(ModelState);
 //         }
-
 //         await _orderRepository.UpdateOrderAsync(order);
-//         return RedirectToAction("Index");
+//         return Ok();
 //     }
 
-//     [HttpGet("Details/{id}")] 
-//     public async Task<IActionResult> Details(int id)
-//     {
-//         var order = await _orderRepository.GetOrderByIdAsync(id);
-//         if (order == null)
-//         {
-//             return NotFound();
-//         }
-//         return View(order); 
-//     }
-
-//     [HttpDelete("Delete/{id}")] 
-//     public async Task<IActionResult> DeleteOrder([FromForm] int id)
+//     [HttpDelete("{id}")]
+//     public async Task<IActionResult> DeleteOrder(int id)
 //     {
 //         if (await _orderRepository.DeleteOrderByIdAsync(id))
 //         {
-//             return RedirectToAction("Index");
+//             return Ok();
 //         }
-//         return NotFound("Такой заказ не найден."); 
+//         return NotFound("Such order not found.");
 //     }
 // }
-

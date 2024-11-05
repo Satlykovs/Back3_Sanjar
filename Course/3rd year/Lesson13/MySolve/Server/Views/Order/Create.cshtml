@@ -1,21 +1,70 @@
 @model Order
 
-<h2>Создать заказ</h2>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="Customer.Name"></label>
-        <input asp-for="Customer.Name" class="form-control" />
-        <span asp-validation-for="Customer.Name" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Customer.Email"></label>
-        <input asp-for="Customer.Email" class="form-control" />
-        <span asp-validation-for="Customer.Email" class="text-danger"></span>
-    </div>
-    <!-- Добавьте поля для товаров и другие поля формы, как требуется -->
-    <div class="form-group">
-        <input type="submit" value="Создать" />
-        <a href="http://localhost:8080/api/order" type="button">Отмена</a>
-    </div>
-</form>
+<head>
+    <link rel="stylesheet" href="~/css/styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+<div class="container mt-4">
+    <h2>Создать заказ</h2>
+
+    <form asp-action="Create" method="post">
+        <div class="form-group">
+            <label asp-for="Customer.Name"></label>
+            <input asp-for="Customer.Name" class="form-control" />
+            <span asp-validation-for="Customer.Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Customer.Email"></label>
+            <input asp-for="Customer.Email" class="form-control" />
+            <span asp-validation-for="Customer.Email" class="text-danger"></span>
+        </div>
+
+        <h3 class="mt-4">Товары</h3>
+        <div id="products">
+            @for (int i = 0; i < Model.Products.Count; i++)
+            {
+                <div class="form-group">
+                    <label asp-for="Products[i].Name"></label>
+                    <input asp-for="Products[i].Name" class="form-control" />
+                    <span asp-validation-for="Products[i].Name" class="text-danger"></span>
+
+                    <label asp-for="Products[i].Price"></label>
+                    <input asp-for="Products[i].Price" class="form-control" />
+                    <span asp-validation-for="Products[i].Price" class="text-danger"></span>
+                </div>
+            }
+        </div>
+
+        <div class="form-group mt-3">
+            <button type="button" class="btn btn-primary" onclick="addProduct()">Добавить товар</button>
+        </div>
+
+        <div class="form-group mt-4">
+            <input type="submit" value="Создать" class="btn btn-success" />
+            <a asp-action="Index" class="btn btn-secondary ms-2">Отмена</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    function addProduct() {
+        var index = document.querySelectorAll('#products .form-group').length;
+        var productHtml = `
+            <div class="form-group mt-3"> <!-- Отступы для новых добавляемых товаров -->
+                <label>Название товара</label>
+                <input name="Products[${index}].Name" class="form-control" />
+                <span class="text-danger"></span>
+
+                <label>Цена товара</label>
+                <input name="Products[${index}].Price" type="number" class="form-control" />
+                <span class="text-danger"></span>
+            </div>
+        `;
+        document.getElementById('products').insertAdjacentHTML('beforeend', productHtml);
+    }
+</script>
+</body>
