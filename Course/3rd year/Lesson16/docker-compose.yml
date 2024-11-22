@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  mult:
+    build:
+      context: ./PracticeA/Mathematics.Multiplication
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+
+
+  add:
+    build:
+      context: ./PracticeA/Mathematics.Addition
+      dockerfile: Dockerfile
+    ports:
+      - 5225:5225
+
+  div:
+    build: 
+      context: ./PracticeA/Mathematics.Division
+      dockerfile: Dockerfile
+    ports:
+      - 5087:5087
+

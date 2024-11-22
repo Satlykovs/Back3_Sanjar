@@ -1,23 +1,24 @@
-# См. статью по ссылке https://aka.ms/customizecontainer, чтобы узнать как настроить контейнер отладки и как Visual Studio использует этот Dockerfile для создания образов для ускорения отладки.
-
-# Этот этап используется при запуске из VS в быстром режиме (по умолчанию для конфигурации отладки)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER app
 WORKDIR /app
-EXPOSE 8081
+EXPOSE 5087
 
+ENV ASPNETCORE_URLS=http://+:5087
 
-# Этот этап используется для сборки проекта службы
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
+USER app
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG configuration=Release
 WORKDIR /src
-COPY *.csproj ./Mathematics.Division/
-RUN dotnet restore Mathematics.Division/Mathematics.Division.csproj
+COPY ["Mathematics.Division.csproj", "Mathematics.Division/"]
+RUN dotnet restore "Mathematics.Division/Mathematics.Division.csproj"
+COPY . ./Mathematics.Division
+WORKDIR "/src/Mathematics.Division"
+RUN dotnet build "Mathematics.Division.csproj" -c $configuration -o /app/build
 
-COPY . ./Mathematics.Division/
-RUN dotnet build Mathematics.Division/Mathematics.Division.csproj -c $BUILD_CONFIGURATION -o /app/build
+FROM build AS publish
+ARG configuration=Release
+RUN dotnet publish "Mathematics.Division.csproj" -c $configuration -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
-COPY --from=build /app/build .
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Mathematics.Division.dll"]

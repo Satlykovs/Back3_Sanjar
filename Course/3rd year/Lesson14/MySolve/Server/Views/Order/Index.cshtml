@@ -1,0 +1,42 @@
+@model IEnumerable<Order>
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<head>
+    <link rel="stylesheet" href="~/css/styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+<div class="container mt-4">
+    <h2>Список заказов</h2>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+            <th>ID</th>
+            <th>Покупатель</th>
+            <th>Товаров</th>
+            <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.Id</td>
+                    <td>@order.Customer?.Name</td>
+                    <td>@order.Products.Count()</td>
+                    <td>
+                    <a asp-action="Edit" asp-route-id="@order.Id">Редактировать</a> |
+                    <a asp-action="Details" asp-route-id="@order.Id">Просмотреть</a> |
+                    <a asp-action="Delete" asp-route-id="@order.Id">Удалить</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+</table>
+
+    <a asp-action="Create" class="btn btn-primary mt-3">Создать заказ</a>
+</div>
+</body>

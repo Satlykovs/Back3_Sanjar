@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  webapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Release
+      - ConnectionString=Host=db;Port=5432;Database=mydatabase;Username=myuser;Password=mypassword
+    depends_on:
+      - db
+  
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+
+
+#У меня все еще какая-то проблема, что контейнер с приложением запускается раньше, чем прогружалается бд. Как это пофиксить, кроме как через костыль на несколько попыток?
