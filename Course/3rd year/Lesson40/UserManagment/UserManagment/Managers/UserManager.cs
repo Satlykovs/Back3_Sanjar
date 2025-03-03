@@ -1,40 +1,40 @@
 ﻿using UserManagment.Models;
+using UserManagment.Interfaces;
 
 namespace UserManagment.Managers;
 
-public class UserManager
+public class UserManager : IUserManager
 {
-    private List<User> users = new List<User>();
+    private readonly IUserRepository _userRepository;
+    private readonly IEmailManager _emailManager;
 
-    public void AddUser(User user)
+    public UserManager(IEmailManager emailManager, IUserRepository userRepository)
     {
-        // Добавление пользователя
-        users.Add(user);
-        SendWelcomeEmail(user.Email);
+        _emailManager  = emailManager;
+        _userRepository = userRepository;
+    }
+
+    public void AddUser(UserCreateDTO userData)
+    {
+        
+        _userRepository.AddUser(new User {Username = userData.Username, Email = userData.Email});
+        _emailManager.SendWelcomeEmail(userData.Email);
     }
 
     public void DeleteUser(int userId)
     {
-        // Удаление пользователя
-        var user = users.FirstOrDefault(u => u.Id == userId);
-        if (user != null) users.Remove(user);
+        _userRepository.DeleteUser(userId);
     }
 
     public User GetUser(int userId)
     {
-        // Получение пользователя
-        return users.FirstOrDefault(u => u.Id == userId);
+        return _userRepository.GetUser(userId);
     }
 
     public IEnumerable<User> GetAllUsers()
     {
-        // Получение всех пользователей
-        return users;
+        return _userRepository.GetAllUsers();
     }
 
-    private void SendWelcomeEmail(string email)
-    {
-        // Логика отправки email
-        Console.WriteLine($"Sending welcome email to {email}");
-    }
+
 }

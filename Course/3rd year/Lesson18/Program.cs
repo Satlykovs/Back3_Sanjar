@@ -14,7 +14,6 @@ class Program
             connection.Open();
 
             CreateTable(connection);
-
             while (true)
             {
                 Console.WriteLine("Choose an option:");
